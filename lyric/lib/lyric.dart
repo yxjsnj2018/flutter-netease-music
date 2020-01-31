@@ -112,15 +112,15 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
           vsync: this,
           duration: Duration(milliseconds: 800),
         )..addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            _lineController.dispose();
-            _lineController = null;
-          }
-        });
+            if (status == AnimationStatus.completed) {
+              _lineController.dispose();
+              _lineController = null;
+            }
+          });
         Animation<double> animation =
-        Tween<double>(begin: lyricPainter.offsetScroll, end: lyricPainter.offsetScroll + offset)
-            .chain(CurveTween(curve: Curves.easeInOut))
-            .animate(_lineController);
+            Tween<double>(begin: lyricPainter.offsetScroll, end: lyricPainter.offsetScroll + offset)
+                .chain(CurveTween(curve: Curves.easeInOut))
+                .animate(_lineController);
         animation.addListener(() {
           lyricPainter.offsetScroll = animation.value;
         });
@@ -128,24 +128,27 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       } else {
         lyricPainter.offsetScroll += offset;
       }
-
-      _gradientController?.dispose();
-      final entry = widget.lyric[line];
-      final startPercent = (milliseconds - entry.position) / entry.duration;
-      _gradientController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: (entry.duration * (1 - startPercent)).toInt()),
-      );
-      _gradientController.addListener(() {
-        lyricPainter.lineGradientPercent = _gradientController.value;
-      });
-      if (widget.playing) {
-        _gradientController.forward(from: startPercent);
-      } else {
-        _gradientController.value = startPercent;
-      }
+      _initGradientController(line, milliseconds);
     }
     lyricPainter.currentLine = line;
+  }
+
+  void _initGradientController(int line, int milliseconds) {
+    _gradientController?.dispose();
+    final entry = widget.lyric[line];
+    final startPercent = (milliseconds - entry.position) / entry.duration;
+    _gradientController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: (entry.duration * (1 - startPercent)).toInt()),
+    );
+    _gradientController.addListener(() {
+      lyricPainter.lineGradientPercent = _gradientController.value;
+    });
+    if (widget.playing) {
+      _gradientController.forward(from: startPercent);
+    } else {
+      _gradientController.value = startPercent;
+    }
   }
 
   bool dragging = false;
@@ -557,12 +560,11 @@ class LyricEntry {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is LyricEntry && runtimeType == other.runtimeType && line == other.line && timeStamp == other.timeStamp;
+      other is LyricEntry && runtimeType == other.runtimeType && line == other.line && timeStamp == other.timeStamp;
 
   @override
   int get hashCode => line.hashCode ^ timeStamp.hashCode;
 }
-
 
 String _getTimeStamp(int milliseconds) {
   int seconds = (milliseconds / 1000).truncate();
