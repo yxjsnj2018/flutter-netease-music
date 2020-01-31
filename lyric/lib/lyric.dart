@@ -1,9 +1,10 @@
+library lyric;
+
 import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/component/utils/utils.dart';
 
 const _enable_paint_debug = false;
 
@@ -25,8 +26,10 @@ class Lyric extends StatefulWidget {
 
   final TextAlign textAlign;
 
+  /// The milliseconds of song position.
   final int position;
 
+  /// Highlight color for playing line.
   final Color highlight;
 
   final Size size;
@@ -109,15 +112,15 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
           vsync: this,
           duration: Duration(milliseconds: 800),
         )..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _lineController.dispose();
-              _lineController = null;
-            }
-          });
+          if (status == AnimationStatus.completed) {
+            _lineController.dispose();
+            _lineController = null;
+          }
+        });
         Animation<double> animation =
-            Tween<double>(begin: lyricPainter.offsetScroll, end: lyricPainter.offsetScroll + offset)
-                .chain(CurveTween(curve: Curves.easeInOut))
-                .animate(_lineController);
+        Tween<double>(begin: lyricPainter.offsetScroll, end: lyricPainter.offsetScroll + offset)
+            .chain(CurveTween(curve: Curves.easeInOut))
+            .animate(_lineController);
         animation.addListener(() {
           lyricPainter.offsetScroll = animation.value;
         });
@@ -536,7 +539,7 @@ class LyricEntry {
     }
   }
 
-  LyricEntry(this.line, this.position, this.duration) : this.timeStamp = getTimeStamp(position);
+  LyricEntry(this.line, this.position, this.duration) : this.timeStamp = _getTimeStamp(position);
 
   final String timeStamp;
   final String line;
@@ -554,8 +557,19 @@ class LyricEntry {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LyricEntry && runtimeType == other.runtimeType && line == other.line && timeStamp == other.timeStamp;
+          other is LyricEntry && runtimeType == other.runtimeType && line == other.line && timeStamp == other.timeStamp;
 
   @override
   int get hashCode => line.hashCode ^ timeStamp.hashCode;
+}
+
+
+String _getTimeStamp(int milliseconds) {
+  int seconds = (milliseconds / 1000).truncate();
+  int minutes = (seconds / 60).truncate();
+
+  String minutesStr = (minutes % 60).toString().padLeft(2, '0');
+  String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+  return "$minutesStr:$secondsStr";
 }

@@ -35,6 +35,8 @@ dependencies:
   music_player:
     path: music_service/
   provider: ^4.0.1
+  lyric:
+    path: lyric
 
 dev_dependencies:
   flutter_test:

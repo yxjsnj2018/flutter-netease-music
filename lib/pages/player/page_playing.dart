@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:lyric/lyric.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/material/playing_indicator.dart';
@@ -12,7 +13,6 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'cover.dart';
-import 'lyric.dart';
 import 'player_progress.dart';
 
 ///歌曲播放页面
