@@ -308,7 +308,7 @@ class _CloudLyric extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Lyric(
+            child: LyricView(
               lyric: playingLyric.lyric,
               lyricLineStyle: normalStyle,
               highlight: style.color,

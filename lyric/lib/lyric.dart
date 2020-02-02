@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 
 const _enable_paint_debug = false;
 
-class Lyric extends StatefulWidget {
-  Lyric({
+class LyricView extends StatefulWidget {
+  LyricView({
     @required this.lyric,
     this.lyricLineStyle,
     this.position,
@@ -40,10 +40,10 @@ class Lyric extends StatefulWidget {
   final bool playing;
 
   @override
-  State<StatefulWidget> createState() => LyricState();
+  State<StatefulWidget> createState() => LyricViewState();
 }
 
-class LyricState extends State<Lyric> with TickerProviderStateMixin {
+class LyricViewState extends State<LyricView> with TickerProviderStateMixin {
   LyricPainter lyricPainter;
 
   AnimationController _flingController;
@@ -66,7 +66,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(Lyric oldWidget) {
+  void didUpdateWidget(LyricView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.lyric != oldWidget.lyric) {
       lyricPainter = LyricPainter(
@@ -419,14 +419,11 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 }
 
 class LyricContent {
-  ///splitter lyric content to line
-  static const LineSplitter _SPLITTER = const LineSplitter();
-
   //默认歌词持续时间
   static const int _default_line_duration = 5 * 1000;
 
   LyricContent.from(String text) {
-    List<String> lines = _SPLITTER.convert(text);
+    List<String> lines = const LineSplitter().convert(text);
     Map map = <int, String>{};
     lines.forEach((l) => LyricEntry.inflate(l, map));
 
